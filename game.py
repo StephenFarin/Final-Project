@@ -1,7 +1,7 @@
-import pygame
-import time
+import pygame as pg
+import time as t
 
 #snake colors
-black = pygame.Color(0,0,0)
-white = pygame.Color
-blue = pygame.Color
+black = pg.Color(0,0,0)
+white = pg.Color
+blue = pg.Color
