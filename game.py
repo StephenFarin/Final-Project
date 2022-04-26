@@ -37,17 +37,27 @@ def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
-    BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
+    BASICFONT = pygame.font.Font('comic.ttf', 18)
     pygame.display.set_caption('Snek')
     
     mainmenu()
     while True:
+        options()
         runGame()
 
 def mainmenu():
     pass
 
 def runGame():
+    startx = random.randint(5, CELLWIDTH - 6)
+    starty = random.randint(5, CELLHEIGHT - 6)
+    wormCoords = [{'x': startx,     'y': starty},
+                  {'x': startx - 1, 'y': starty},
+                  {'x': startx - 2, 'y': starty}]
+    direction = RIGHT
+    apple = getRandomLocation()
+    
+def getRandomLocation():
     pass
 
 def gameOver():
