@@ -59,7 +59,10 @@ def runGame():
                   {'x': startx - 1, 'y': starty},
                   {'x': startx - 2, 'y': starty}]
     direction = RIGHT
-    apple = getRandomLocation()
+    tempFruitsNumber = fruitsNumber
+    while tempFruitsNumber >= 1:
+        apple = getRandomLocation()
+        tempFruitsNumber -= 1
     while True: # main game loop
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
@@ -163,7 +166,7 @@ def gameOver():
     pass
   
 def options():
-    pass
+    global fruitsNumber = 1
 
 def mainmenu():
     titleFont = pygame.font.Font('freesansbold.ttf', 100)
