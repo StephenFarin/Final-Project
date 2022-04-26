@@ -40,7 +40,7 @@ def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH,WINDOWHEIGHT))
-    BASICFONT = pygame.font.Font('comic.ttf', 18)
+    BASICFONT = pygame.font.Font('COMIC.TTF', 18)
     pygame.display.set_caption('Snek')
     
     mainmenu()
