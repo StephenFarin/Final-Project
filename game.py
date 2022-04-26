@@ -62,7 +62,7 @@ def runGame():
     direction = RIGHT
 
     tempFruitsNumber = fruitsNumber
-    bomb = []
+    bomb = getRandomLocation()
     apples = []
     while tempFruitsNumber >= 1:
         apples.append(getRandomLocation())
