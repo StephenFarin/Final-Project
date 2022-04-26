@@ -91,16 +91,21 @@ def runGame():
             if wormBody['x'] == wormCoords[HEAD]['x'] and wormBody['y'] == wormCoords[HEAD]['y']:
                 return # game over
 
-        # check if worm has eaten an apply
-        if wormCoords[HEAD]['x'] == apple['x'] and wormCoords[HEAD]['y'] == apple['y']:
-            # don't remove worm's tail segment
-            apple = getRandomLocation() # set a new apple somewhere
-        else:
+        # check if worm has eaten an apple
+        eatenApples = 0
+        for location in apples:
+            if wormCoords[HEAD]['x'] == location['x'] and wormCoords[HEAD]['y'] == location['y']:
+                # don't remove worm's tail segment
+                appended = 0
+                while appended == 0:
+                    loc = getRandomLocation()
+                    if loc not in apples:
+                        apples.remove(location)
+                        apples.append(loc) # add a new apple
+                        appended = 1
+                        eatenApples += 1
+        if eatenApples == 0:
             del wormCoords[-1] # remove worm's tail segment
-         
-        # check if worm has eaten a Bomb
-        if wormCoords[HEAD]['x'] == bomb['x'] and wormCoords[HEAD]['y'] == bomb['y']:
-            return # game over
 
         # move the worm by adding a segment in the direction it is moving
         if direction == UP:
@@ -115,7 +120,7 @@ def runGame():
         DISPLAYSURF.fill(BGCOLOR)
         drawGrid()
         drawWorm(wormCoords)
-        drawApple(apple)
+        drawApples(apples)
         drawScore(len(wormCoords) - 3)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -216,11 +221,12 @@ def drawWorm(wormCoords):
         pygame.draw.rect(DISPLAYSURF, GREEN, wormInnerSegmentRect)
 
 
-def drawApple(coord):
-    x = coord['x'] * CELLSIZE
-    y = coord['y'] * CELLSIZE
-    appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-    pygame.draw.rect(DISPLAYSURF, RED, appleRect)
+def drawApples(coords):
+    for coord in coords:
+        x = coord['x'] * CELLSIZE
+        y = coord['y'] * CELLSIZE
+        appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
+        pygame.draw.rect(DISPLAYSURF, RED, appleRect)
     
 def drawBomb(coord):
     x = coord['x'] * CELLSIZE
