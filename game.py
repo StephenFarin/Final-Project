@@ -125,6 +125,7 @@ def runGame():
         drawGrid()
         drawWorm(wormCoords)
         drawApples(apples)
+        drawBomb(bomb)
         drawScore(len(wormCoords) - 3)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
