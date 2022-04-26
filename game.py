@@ -106,6 +106,10 @@ def runGame():
                         eatenApples += 1
         if eatenApples == 0:
             del wormCoords[-1] # remove worm's tail segment
+        
+        # check if worm has eaten a Bomb
+        if wormCoords[HEAD]['x'] == bomb['x'] and wormCoords[HEAD]['y'] == bomb['y']:
+            return # game over
 
         # move the worm by adding a segment in the direction it is moving
         if direction == UP:
