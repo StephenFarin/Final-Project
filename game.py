@@ -1,8 +1,10 @@
+#Initial Imports
 import pygame, sys, random
 from pygame.locals import *
 
 pygame.init()
 FPS = 15
+#Game Display Window
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
 CELLSIZE = 20
@@ -10,6 +12,7 @@ assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell siz
 assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
 CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
 CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
+#Colors
 Aqua = (0, 255, 255)
 Black = (0, 0, 0)
 Blue = (0, 0, 255)
@@ -49,6 +52,7 @@ def mainmenu():
     pass
 
 def runGame():
+    #Worm spawn location
     startx = random.randint(5, CELLWIDTH - 6)
     starty = random.randint(5, CELLHEIGHT - 6)
     wormCoords = [{'x': startx,     'y': starty},
