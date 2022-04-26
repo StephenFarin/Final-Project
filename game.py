@@ -43,7 +43,7 @@ def main():
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     BASICFONT = pygame.font.Font('COMIC.TTF', 18)
-    pygame.display.set_caption('Wormy')
+    pygame.display.set_caption('Snek')
 
     mainmenu()
     while True:
@@ -97,6 +97,10 @@ def runGame():
             apple = getRandomLocation() # set a new apple somewhere
         else:
             del wormCoords[-1] # remove worm's tail segment
+         
+        # check if worm has eaten a Bomb
+        if wormCoords[HEAD]['x'] == bomb['x'] and wormCoords[HEAD]['y'] == bomb['y']:
+            return # game over
 
         # move the worm by adding a segment in the direction it is moving
         if direction == UP:
@@ -136,9 +140,9 @@ def checkForKeyPress():
 
 
 def showStartScreen():
-    titleFont = pygame.font.Font('freesansbold.ttf', 100)
-    titleSurf1 = titleFont.render('Wormy!', True, WHITE, DARKGREEN)
-    titleSurf2 = titleFont.render('Wormy!', True, GREEN)
+    titleFont = pygame.font.Font('COMIC.ttf', 100)
+    titleSurf1 = titleFont.render('Snek!', True, WHITE, DARKGREEN)
+    titleSurf2 = titleFont.render('Snek!', True, GREEN)
 
     degrees1 = 0
     degrees2 = 0
@@ -217,7 +221,12 @@ def drawApple(coord):
     y = coord['y'] * CELLSIZE
     appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
     pygame.draw.rect(DISPLAYSURF, RED, appleRect)
-
+    
+def drawBomb(coord):
+    x = coord['x'] * CELLSIZE
+    y = coord['y'] * CELLSIZE
+    bombRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
+    pygame.draw.rect(DISPLAYSURF, SILVER, bombRect)
 
 def drawGrid():
     for x in range(0, WINDOWWIDTH, CELLSIZE): # draw vertical lines
@@ -234,9 +243,9 @@ def options():
     return
 
 def mainmenu():
-    titleFont = pygame.font.Font('freesansbold.ttf', 100)
-    titleSurf1 = titleFont.render('Wormy!', True, WHITE, DARKGREEN)
-    titleSurf2 = titleFont.render('Wormy!', True, GREEN)
+    titleFont = pygame.font.Font('COMIC.ttf', 100)
+    titleSurf1 = titleFont.render('Snek!', True, WHITE, DARKGREEN)
+    titleSurf2 = titleFont.render('Snek!', True, GREEN)
 
     degrees1 = 0
     degrees2 = 0
