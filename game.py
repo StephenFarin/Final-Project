@@ -102,6 +102,7 @@ def runGame():
                     if loc not in apples:
                         apples.remove(location)
                         apples.append(loc) # add a new apple
+                        bomb = getRandomLocation()
                         appended = 1
                         eatenApples += 1
         if eatenApples == 0:
