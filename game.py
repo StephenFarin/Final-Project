@@ -36,6 +36,10 @@ RIGHT = 'right'
 
 HEAD = 0 # syntactic sugar: index of the worm's head
 
+pygame.mixer.init()
+nom = pygame.mixer.Sound("nom.wav")
+death = pygame.mixer.Sound("death.wav")
+
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT
 
@@ -101,11 +105,13 @@ def runGame():
                 while appended == 0:
                     loc = getRandomLocation()
                     if loc not in apples:
+                        pygame.mixer.Sound.play(nom)
                         apples.remove(location)
                         apples.append(loc) # add a new apple
                         bomb = getRandomLocation()
                         appended = 1
                         eatenApples += 1
+                        
         if eatenApples == 0:
             del wormCoords[-1] # remove worm's tail segment
         
@@ -198,6 +204,7 @@ def showGameOverScreen():
     overRect = overSurf.get_rect()
     gameRect.midtop = (WINDOWWIDTH / 2, 10)
     overRect.midtop = (WINDOWWIDTH / 2, gameRect.height + 10 + 25)
+    pygame.mixer.Sound.play(death)
 
     DISPLAYSURF.blit(gameSurf, gameRect)
     DISPLAYSURF.blit(overSurf, overRect)
