@@ -39,6 +39,7 @@ HEAD = 0 # syntactic sugar: index of the worm's head
 pygame.mixer.init()
 nom = pygame.mixer.Sound("nom.wav")
 death = pygame.mixer.Sound("death.wav")
+start = pygame.mixer.Sound("start.wav")
 
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT
@@ -65,6 +66,7 @@ def runGame():
                   {'x': startx - 2, 'y': starty}]
     direction = RIGHT
 
+    pygame.mixer.Sound.play(start)
     tempFruitsNumber = fruitsNumber
     bomb = getRandomLocation()
     apples = []
