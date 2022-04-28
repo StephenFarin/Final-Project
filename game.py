@@ -4,7 +4,7 @@ from pygame.locals import *
 FPS = 30
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
-CELLSIZE = 20
+CELLSIZE = 32
 assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
 CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
@@ -68,13 +68,25 @@ def runGame():
 
     pygame.mixer.Sound.play(start)
     tempFruitsNumber = fruitsNumber
-    wormSpeedCounter = 0
+    localWormSpeed = wormSpeed
+    wormSpeedCounter = -1
     bomb = getRandomLocation()
+    slowPowerupLoc = getRandomLocation()
     apples = []
     while tempFruitsNumber >= 1:
         apples.append(getRandomLocation())
         print(apples)
         tempFruitsNumber -= 1
+    pygame.display.update()
+    DISPLAYSURF.fill(BGCOLOR)
+    drawGrid()
+    drawWorm(wormCoords)
+    drawApples(apples)
+    drawBomb(bomb)
+    drawScore(len(wormCoords) - 3)
+    wormSpeedCounter = 30
+    shouldDrawSlowPowerup = False
+    slowPowerupTimer = 0
 
     while True: # main game loop
         if wormSpeedCounter == 0:
@@ -122,6 +134,12 @@ def runGame():
             # check if worm has eaten a Bomb
             if wormCoords[HEAD]['x'] == bomb['x'] and wormCoords[HEAD]['y'] == bomb['y']:
                 return # game over
+            
+            # check if worm has eaten a Slow Powerup
+            if shouldDrawSlowPowerup == True:
+                if wormCoords[HEAD]['x'] == slowPowerupLoc['x'] and wormCoords[HEAD]['y'] == slowPowerupLoc['y']:
+                    localWormSpeed = localWormSpeed // 2
+                    slowPowerupTimer = 300
 
             # move the worm by adding a segment in the direction it is moving
             if direction == UP:
@@ -132,6 +150,12 @@ def runGame():
                 newHead = {'x': wormCoords[HEAD]['x'] - 1, 'y': wormCoords[HEAD]['y']}
             elif direction == RIGHT:
                 newHead = {'x': wormCoords[HEAD]['x'] + 1, 'y': wormCoords[HEAD]['y']}
+            
+            if slowModePowerups == True:
+                if random.randint(1,300) == 300:
+                    print("powerup should be drawn here")
+                    shouldDrawSlowPowerup = True
+            
             wormCoords.insert(0, newHead)
             DISPLAYSURF.fill(BGCOLOR)
             drawGrid()
@@ -139,7 +163,15 @@ def runGame():
             drawApples(apples)
             drawBomb(bomb)
             drawScore(len(wormCoords) - 3)
-            wormSpeedCounter = wormSpeed
+            if shouldDrawSlowPowerup == True:
+                drawSlowPowerup(slowPowerupLoc)
+            wormSpeedCounter = localWormSpeed
+        if shouldDrawSlowPowerup == True:
+            if slowPowerupTimer >= 1:
+                slowPowerupTimer -= 1
+            elif slowPowerupTimer == 0:
+                shouldDrawSlowPowerup = False
+                slowPowerupTimer = -1
         wormSpeedCounter -= 1
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -253,6 +285,12 @@ def drawBomb(coord):
     y = coord['y'] * CELLSIZE
     bombRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
     pygame.draw.rect(DISPLAYSURF, SILVER, bombRect)
+    
+def drawSlowPowerup(coord):
+    x = coord['x'] * CELLSIZE
+    y = coord['y'] * CELLSIZE
+    powerupRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
+    pygame.draw.rect(DISPLAYSURF, BLUE, powerupRect)
 
 def drawGrid():
     for x in range(0, WINDOWWIDTH, CELLSIZE): # draw vertical lines
@@ -264,11 +302,12 @@ def gameOver():
     pass
   
 def options():
-    global fruitsNumber, wormSpeed, wormInnerColor, wormOuterColor
-    wormInnerColor = GREEN
-    wormOuterColor = DARKGREEN
+    global fruitsNumber, wormSpeed, wormInnerColor, wormOuterColor, slowModePowerups
+    wormInnerColor = BLACK
+    wormOuterColor = GRAY
     fruitsNumber = 3
     wormSpeed = 1
+    slowModePowerups = True
     return
 
 def mainmenu():
