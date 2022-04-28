@@ -236,9 +236,9 @@ def drawWorm(wormCoords):
         x = coord['x'] * CELLSIZE
         y = coord['y'] * CELLSIZE
         wormSegmentRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-        pygame.draw.rect(DISPLAYSURF, DARKGREEN, wormSegmentRect)
+        pygame.draw.rect(DISPLAYSURF, wormOuterColor, wormSegmentRect)
         wormInnerSegmentRect = pygame.Rect(x + 4, y + 4, CELLSIZE - 8, CELLSIZE - 8)
-        pygame.draw.rect(DISPLAYSURF, GREEN, wormInnerSegmentRect)
+        pygame.draw.rect(DISPLAYSURF, wormInnerColor, wormInnerSegmentRect)
 
 
 def drawApples(coords):
@@ -264,7 +264,9 @@ def gameOver():
     pass
   
 def options():
-    global fruitsNumber, wormSpeed
+    global fruitsNumber, wormSpeed, wormInnerColor, wormOuterColor
+    wormInnerColor = GREEN
+    wormOuterColor = DARKGREEN
     fruitsNumber = 3
     wormSpeed = 1
     return
