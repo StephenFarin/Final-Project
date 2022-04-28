@@ -1,7 +1,7 @@
 import random, pygame, sys
 from pygame.locals import *
 
-FPS = 15
+FPS = 30
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
 CELLSIZE = 20
@@ -68,6 +68,7 @@ def runGame():
 
     pygame.mixer.Sound.play(start)
     tempFruitsNumber = fruitsNumber
+    wormSpeedCounter = 0
     bomb = getRandomLocation()
     apples = []
     while tempFruitsNumber >= 1:
@@ -76,67 +77,70 @@ def runGame():
         tempFruitsNumber -= 1
 
     while True: # main game loop
-        for event in pygame.event.get(): # event handling loop
-            if event.type == QUIT:
-                terminate()
-            elif event.type == KEYDOWN:
-                if (event.key == K_LEFT or event.key == K_a) and direction != RIGHT:
-                    direction = LEFT
-                elif (event.key == K_RIGHT or event.key == K_d) and direction != LEFT:
-                    direction = RIGHT
-                elif (event.key == K_UP or event.key == K_w) and direction != DOWN:
-                    direction = UP
-                elif (event.key == K_DOWN or event.key == K_s) and direction != UP:
-                    direction = DOWN
-                elif event.key == K_ESCAPE:
+        if wormSpeedCounter == 0:
+            for event in pygame.event.get(): # event handling loop
+                if event.type == QUIT:
                     terminate()
+                elif event.type == KEYDOWN:
+                    if (event.key == K_LEFT or event.key == K_a) and direction != RIGHT:
+                        direction = LEFT
+                    elif (event.key == K_RIGHT or event.key == K_d) and direction != LEFT:
+                        direction = RIGHT
+                    elif (event.key == K_UP or event.key == K_w) and direction != DOWN:
+                        direction = UP
+                    elif (event.key == K_DOWN or event.key == K_s) and direction != UP:
+                        direction = DOWN
+                    elif event.key == K_ESCAPE:
+                        terminate()
 
-        # check if the worm has hit itself or the edge
-        if wormCoords[HEAD]['x'] == -1 or wormCoords[HEAD]['x'] == CELLWIDTH or wormCoords[HEAD]['y'] == -1 or wormCoords[HEAD]['y'] == CELLHEIGHT:
-            return # game over
-        for wormBody in wormCoords[1:]:
-            if wormBody['x'] == wormCoords[HEAD]['x'] and wormBody['y'] == wormCoords[HEAD]['y']:
+            # check if the worm has hit itself or the edge
+            if wormCoords[HEAD]['x'] == -1 or wormCoords[HEAD]['x'] == CELLWIDTH or wormCoords[HEAD]['y'] == -1 or wormCoords[HEAD]['y'] == CELLHEIGHT:
+                return # game over
+            for wormBody in wormCoords[1:]:
+                if wormBody['x'] == wormCoords[HEAD]['x'] and wormBody['y'] == wormCoords[HEAD]['y']:
+                    return # game over
+
+            # check if worm has eaten an apple
+            eatenApples = 0
+            for location in apples:
+                if wormCoords[HEAD]['x'] == location['x'] and wormCoords[HEAD]['y'] == location['y']:
+                    # don't remove worm's tail segment
+                    appended = 0
+                    while appended == 0:
+                        loc = getRandomLocation()
+                        if loc not in apples:
+                            pygame.mixer.Sound.play(nom)
+                            apples.remove(location)
+                            apples.append(loc) # add a new apple
+                            bomb = getRandomLocation()
+                            appended = 1
+                            eatenApples += 1
+                            
+            if eatenApples == 0:
+                del wormCoords[-1] # remove worm's tail segment
+            
+            # check if worm has eaten a Bomb
+            if wormCoords[HEAD]['x'] == bomb['x'] and wormCoords[HEAD]['y'] == bomb['y']:
                 return # game over
 
-        # check if worm has eaten an apple
-        eatenApples = 0
-        for location in apples:
-            if wormCoords[HEAD]['x'] == location['x'] and wormCoords[HEAD]['y'] == location['y']:
-                # don't remove worm's tail segment
-                appended = 0
-                while appended == 0:
-                    loc = getRandomLocation()
-                    if loc not in apples:
-                        pygame.mixer.Sound.play(nom)
-                        apples.remove(location)
-                        apples.append(loc) # add a new apple
-                        bomb = getRandomLocation()
-                        appended = 1
-                        eatenApples += 1
-                        
-        if eatenApples == 0:
-            del wormCoords[-1] # remove worm's tail segment
-        
-        # check if worm has eaten a Bomb
-        if wormCoords[HEAD]['x'] == bomb['x'] and wormCoords[HEAD]['y'] == bomb['y']:
-            return # game over
-
-        # move the worm by adding a segment in the direction it is moving
-        if direction == UP:
-            newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] - 1}
-        elif direction == DOWN:
-            newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] + 1}
-        elif direction == LEFT:
-            newHead = {'x': wormCoords[HEAD]['x'] - 1, 'y': wormCoords[HEAD]['y']}
-        elif direction == RIGHT:
-            newHead = {'x': wormCoords[HEAD]['x'] + 1, 'y': wormCoords[HEAD]['y']}
-        wormCoords.insert(0, newHead)
-        DISPLAYSURF.fill(BGCOLOR)
-        drawGrid()
-        drawWorm(wormCoords)
-        drawApples(apples)
-        drawBomb(bomb)
-        drawScore(len(wormCoords) - 3)
+            # move the worm by adding a segment in the direction it is moving
+            if direction == UP:
+                newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] - 1}
+            elif direction == DOWN:
+                newHead = {'x': wormCoords[HEAD]['x'], 'y': wormCoords[HEAD]['y'] + 1}
+            elif direction == LEFT:
+                newHead = {'x': wormCoords[HEAD]['x'] - 1, 'y': wormCoords[HEAD]['y']}
+            elif direction == RIGHT:
+                newHead = {'x': wormCoords[HEAD]['x'] + 1, 'y': wormCoords[HEAD]['y']}
+            wormCoords.insert(0, newHead)
+            DISPLAYSURF.fill(BGCOLOR)
+            drawGrid()
+            drawWorm(wormCoords)
+            drawApples(apples)
+            drawBomb(bomb)
+            drawScore(len(wormCoords) - 3)
+            wormSpeedCounter = wormSpeed
+        wormSpeedCounter -= 1
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
@@ -260,8 +264,9 @@ def gameOver():
     pass
   
 def options():
-    global fruitsNumber
+    global fruitsNumber, wormSpeed
     fruitsNumber = 3
+    wormSpeed = 1
     return
 
 def mainmenu():
