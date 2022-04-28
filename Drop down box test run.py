@@ -64,7 +64,7 @@ list1 = DropDown(
     [COLOR_LIST_INACTIVE, COLOR_LIST_ACTIVE],
     50, 50, 200, 50, 
     pg.font.SysFont(None, 30), 
-    "Select Mode", ["light speed","Slow","Medium", "fast"])
+    "Select Mode", ["Slow","Medium", "fast", "light speed"])
 
 run = True
 while run:
