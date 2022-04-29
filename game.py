@@ -4,7 +4,7 @@ from pygame.locals import *
 FPS = 30
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 640
-CELLSIZE = 32
+CELLSIZE = 8
 assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
 CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
@@ -89,19 +89,28 @@ def runGame():
     slowPowerupTimer = 0
 
     while True: # main game loop
+        a_KeyHasBeenPressed = False
         if wormSpeedCounter == 0:
             for event in pygame.event.get(): # event handling loop
                 if event.type == QUIT:
                     terminate()
                 elif event.type == KEYDOWN:
                     if (event.key == K_LEFT or event.key == K_a) and direction != RIGHT:
-                        direction = LEFT
+                        if a_KeyHasBeenPressed == False:
+                            direction = LEFT
+                            a_KeyHasBeenPressed = True
                     elif (event.key == K_RIGHT or event.key == K_d) and direction != LEFT:
-                        direction = RIGHT
+                        if a_KeyHasBeenPressed == False:
+                            direction = RIGHT
+                            a_KeyHasBeenPressed = True
                     elif (event.key == K_UP or event.key == K_w) and direction != DOWN:
-                        direction = UP
+                        if a_KeyHasBeenPressed == False:
+                            direction = UP
+                            a_KeyHasBeenPressed = True
                     elif (event.key == K_DOWN or event.key == K_s) and direction != UP:
-                        direction = DOWN
+                        if a_KeyHasBeenPressed == False:
+                            direction = DOWN
+                            a_KeyHasBeenPressed = True
                     elif event.key == K_ESCAPE:
                         terminate()
 
@@ -302,7 +311,7 @@ def options():
     global fruitsNumber, wormSpeed, wormInnerColor, wormOuterColor, slowModePowerups
     wormInnerColor = BLACK
     wormOuterColor = BLUE
-    fruitsNumber = 3
+    fruitsNumber = 100
     wormSpeed = 2
     slowModePowerups = False
     return
@@ -333,8 +342,8 @@ def mainmenu():
             return
         pygame.display.update()
         FPSCLOCK.tick(FPS)
-        degrees1 += 3 # rotate by 3 degrees each frame
-        degrees2 += 7 # rotate by 7 degrees each frame
+        degrees1 += 1.5 # rotate by 1.5 degrees each frame
+        degrees2 += 3.5 # rotate by 3.5 degrees each frame
 
 if __name__ == '__main__':
     main()
