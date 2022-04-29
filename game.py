@@ -3,7 +3,7 @@ from pygame.locals import *
 
 FPS = 30
 WINDOWWIDTH = 640
-WINDOWHEIGHT = 480
+WINDOWHEIGHT = 640
 CELLSIZE = 32
 assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
@@ -298,16 +298,13 @@ def drawGrid():
     for y in range(0, WINDOWHEIGHT, CELLSIZE): # draw horizontal lines
         pygame.draw.line(DISPLAYSURF, DARKGRAY, (0, y), (WINDOWWIDTH, y))
 
-def gameOver():
-    pass
-  
 def options():
     global fruitsNumber, wormSpeed, wormInnerColor, wormOuterColor, slowModePowerups
     wormInnerColor = BLACK
-    wormOuterColor = GRAY
+    wormOuterColor = BLUE
     fruitsNumber = 3
-    wormSpeed = 1
-    slowModePowerups = True
+    wormSpeed = 2
+    slowModePowerups = False
     return
 
 def mainmenu():
