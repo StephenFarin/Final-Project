@@ -283,23 +283,29 @@ def drawWorm(wormCoords):
 
 
 def drawApples(coords):
+    apple_graph = pygame.image.load('graphics/apple_red.png').convert_alpha()
+    appleAdj = pygame.transform.smoothscale(apple_graph, (CELLSIZE, CELLSIZE))
     for coord in coords:
         x = coord['x'] * CELLSIZE
         y = coord['y'] * CELLSIZE
         appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-        pygame.draw.rect(DISPLAYSURF, RED, appleRect)
+        DISPLAYSURF.blit(appleAdj, appleRect)
     
 def drawBomb(coord):
+    bomb_graph = pygame.image.load('graphics/bomb.png').convert_alpha()
+    bombAdj = pygame.transform.smoothscale(bomb_graph, (CELLSIZE, CELLSIZE))
     x = coord['x'] * CELLSIZE
     y = coord['y'] * CELLSIZE
     bombRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-    pygame.draw.rect(DISPLAYSURF, SILVER, bombRect)
+    DISPLAYSURF.blit(bombAdj, bombRect)
     
 def drawSlowPowerup(coord):
+    gold_graph = pygame.image.load('graphics/apple_gold.png').convert_alpha()
+    goldAdj = pygame.transform.smoothscale(gold_graph, (CELLSIZE, CELLSIZE))
     x = coord['x'] * CELLSIZE
     y = coord['y'] * CELLSIZE
     powerupRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-    pygame.draw.rect(DISPLAYSURF, BLUE, powerupRect)
+    DISPLAYSURF.blit(goldAdj, powerupRect)
 
 def drawGrid():
     for x in range(0, WINDOWWIDTH, CELLSIZE): # draw vertical lines
