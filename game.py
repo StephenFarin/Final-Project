@@ -1,10 +1,17 @@
 import random, pygame, sys
 from pygame.locals import *
 
+
+
 FPS = 30
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 640
 CELLSIZE = 8
+
+screen = pygame.display.set_mode((500, 500),0,32)
+mainClock = pygame.time.Clock()
+
+
 assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
 CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
@@ -39,25 +46,91 @@ HEAD = 0 # syntactic sugar: index of the worm's head
 pygame.mixer.init()
 nom = pygame.mixer.Sound("nom.wav")
 death = pygame.mixer.Sound("death.wav")
-start = pygame.mixer.Sound("start.wav")
+start = pygame.mixer.Sound("nom.wav")
 
 def main():
     global FPSCLOCK, DISPLAYSURF, BASICFONT
 
     pygame.init()
+    font = pygame.font.SysFont(None, 20)
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     BASICFONT = pygame.font.Font('COMIC.TTF', 18)
     pygame.display.set_caption('Snek')
+ 
 
-    mainmenu()
+    snekScreen()
     while True:
         options()
         runGame()
         showGameOverScreen()
 
+def draw_text(text, fot, color, surface, x, y):
+    font = pygame.font.SysFont(None, 20)
+    textobj = font.render(text, 1, color)
+    textrect = textobj.get_rect()
+    textrect.topleft = (x, y)
+    surface.blit(textobj, textrect)
+
+click = False
+
+
+def mainmenu():
+    while True:
+        screen.fill((0,0,0))
+        font = pygame.font.SysFont(None, 20)
+        draw_text('Main Menu', font, (255, 255, 255), screen, 20, 20)
+
+        mx, my = pygame.mouse.get_pos()
+
+        startButton = pygame.Rect(50, 100, 200, 50)
+        optionsButton = pygame.Rect(50, 200, 200, 50)
+        if startButton.collidepoint((mx, my)):
+            if click:
+                options()
+                runGame()
+        if optionsButton.collidepoint((mx, my)):
+            if click:
+                optionsMenu()
+        pygame.draw.rect(screen, TEAL, startButton)
+        pygame.draw.rect(screen, MAROON, optionsButton)
+
+        click = False
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+               pygame.quit()
+               sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
+        pygame.display.update()
+        mainClock.tick(60)
+
+def optionsMenu():
+    running = True
+    while running:
+        screen.fill((0,0,0))
+        font = pygame.font.SysFont(None, 20)
+        draw_text('Options Menu', font, (255, 255, 255), screen, 20, 20)
+        draw_text('Hit Esc to return to Main Menu', font, (255, 255, 255), screen, 400, 600)
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+        pygame.display.update()
+        mainClock.tick(60)
 
 def runGame():
+
     # Set a random start point.
     startx = random.randint(5, CELLWIDTH - 6)
     starty = random.randint(5, CELLHEIGHT - 6)
@@ -226,8 +299,7 @@ def showStartScreen():
         drawPressKeyMsg()
 
         if checkForKeyPress():
-            pygame.event.get() # clear event queue
-            return
+            mainmenu()
         pygame.display.update()
         FPSCLOCK.tick(FPS)
         degrees1 += 3 # rotate by 3 degrees each frame
@@ -283,7 +355,7 @@ def drawWorm(wormCoords):
 
 
 def drawApples(coords):
-    apple_graph = pygame.image.load('graphics/apple_red.png').convert_alpha()
+    apple_graph = pygame.image.load('apple_red.png').convert_alpha()
     appleAdj = pygame.transform.smoothscale(apple_graph, (CELLSIZE, CELLSIZE))
     for coord in coords:
         x = coord['x'] * CELLSIZE
@@ -292,7 +364,7 @@ def drawApples(coords):
         DISPLAYSURF.blit(appleAdj, appleRect)
     
 def drawBomb(coord):
-    bomb_graph = pygame.image.load('graphics/bomb.png').convert_alpha()
+    bomb_graph = pygame.image.load('bomb.png').convert_alpha()
     bombAdj = pygame.transform.smoothscale(bomb_graph, (CELLSIZE, CELLSIZE))
     x = coord['x'] * CELLSIZE
     y = coord['y'] * CELLSIZE
@@ -322,7 +394,7 @@ def options():
     slowModePowerups = False
     return
 
-def mainmenu():
+def snekScreen():
     titleFont = pygame.font.Font('COMIC.ttf', 100)
     titleSurf1 = titleFont.render('Snek!', True, WHITE, DARKGREEN)
     titleSurf2 = titleFont.render('Snek!', True, GREEN)
@@ -344,8 +416,7 @@ def mainmenu():
         drawPressKeyMsg()
 
         if checkForKeyPress():
-            pygame.event.get() # clear event queue
-            return
+            mainmenu()
         pygame.display.update()
         FPSCLOCK.tick(FPS)
         degrees1 += 1.5 # rotate by 1.5 degrees each frame
