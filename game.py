@@ -94,6 +94,8 @@ def mainmenu():
                 optionsMenu()
         pygame.draw.rect(screen, TEAL, startButton)
         pygame.draw.rect(screen, MAROON, optionsButton)
+        draw_text('Start Game', font, (255, 255, 255), screen, 80, 115)
+        draw_text('Options Menu', font, (255, 255, 255), screen, 80, 215)
 
         click = False
 
