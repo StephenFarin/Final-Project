@@ -268,7 +268,6 @@ def runGame():
     localWormSpeed = wormSpeed
     wormSpeedCounter = -1
     bomb = getRandomLocation()
-    slowPowerupLoc = getRandomLocation()
     apples = []
     while tempFruitsNumber >= 1:
         apples.append(getRandomLocation())
@@ -282,8 +281,6 @@ def runGame():
     drawBomb(bomb)
     drawScore(len(worm.body) - 3)
     wormSpeedCounter = 30
-    shouldDrawSlowPowerup = False
-    slowPowerupTimer = 0
 
     while True: # main game loop
         a_KeyHasBeenPressed = False
@@ -343,12 +340,6 @@ def runGame():
                 showGameOverScreen()
                 return # game over
             
-            # check if worm has eaten a Slow Powerup
-            if shouldDrawSlowPowerup == True:
-                if worm.body[0].x == slowPowerupLoc['x'] and worm.body[0].y == slowPowerupLoc['y']:
-                    localWormSpeed = localWormSpeed // 2
-                    slowPowerupTimer = 300
-
             # move the worm
             if direction == UP:
                 worm.direction = Vector2(0,-1)
@@ -363,11 +354,7 @@ def runGame():
                 worm.direction = Vector2(1,0)
                 worm.move_worm()
             
-            if slowModePowerups == True:
-                if random.randint(1,300) == 300:
-                    print("powerup should be drawn here")
-                    shouldDrawSlowPowerup = True
-            
+           
             DISPLAYSURF.fill(BGCOLOR)
             drawGrid()
             worm.draw_worm()
@@ -377,12 +364,6 @@ def runGame():
             if shouldDrawSlowPowerup == True:
                 drawSlowPowerup(slowPowerupLoc)
             wormSpeedCounter = localWormSpeed
-        if shouldDrawSlowPowerup == True:
-            if slowPowerupTimer >= 1:
-                slowPowerupTimer -= 1
-            elif slowPowerupTimer == 0:
-                shouldDrawSlowPowerup = False
-                slowPowerupTimer = -1
         wormSpeedCounter -= 1
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -696,14 +677,6 @@ def drawBomb(coord):
     bombRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
     DISPLAYSURF.blit(bombAdj, bombRect)
     
-def drawSlowPowerup(coord):
-    gold_graph = pygame.image.load('graphics/apple_gold.png').convert_alpha()
-    goldAdj = pygame.transform.smoothscale(gold_graph, (CELLSIZE, CELLSIZE))
-    x = coord['x'] * CELLSIZE
-    y = coord['y'] * CELLSIZE
-    powerupRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-    DISPLAYSURF.blit(goldAdj, powerupRect)
-
 def drawGrid():
     for x in range(0, WINDOWWIDTH, CELLSIZE): # draw vertical lines
         pygame.draw.line(DISPLAYSURF, DARKGRAY, (x, 0), (x, WINDOWHEIGHT))
