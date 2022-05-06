@@ -30,6 +30,8 @@ WHITE = (255, 255, 255)
 YELLOW = (255, 255, 0)
 BGCOLOR = BLACK
 
+WORMCOLOR = RED
+
 UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
@@ -276,8 +278,14 @@ class WORM():
                      Vector2(startx - 2, starty)]
         self.direction = Vector2(1,0)
         self.new_block = False
-        
-        #load snake graphics
+        self.change_color = WORMCOLOR
+
+        self.load_graphics()
+        self.scale_graphics()
+        self.color_graphics()
+
+    def load_graphics(self):
+        #calls graphics into game
         self.head_up = pygame.image.load('graphics/head_up.png').convert_alpha()
         self.head_down = pygame.image.load('graphics/head_down.png').convert_alpha()
         self.head_right = pygame.image.load('graphics/head_right.png').convert_alpha()
@@ -301,6 +309,7 @@ class WORM():
         self.body_br = pygame.image.load('graphics/body_br.png').convert_alpha()
         self.body_bl = pygame.image.load('graphics/body_bl.png').convert_alpha()
 
+    def scale_graphics(self):
         #scale graphics to fit cell size
         self.head_up_scale = pygame.transform.smoothscale(self.head_up, (CELLSIZE, CELLSIZE))
         self.head_down_scale = pygame.transform.smoothscale(self.head_down, (CELLSIZE, CELLSIZE))
@@ -324,6 +333,77 @@ class WORM():
         self.body_tl_scale = pygame.transform.smoothscale(self.body_tl, (CELLSIZE, CELLSIZE))
         self.body_br_scale = pygame.transform.smoothscale(self.body_br, (CELLSIZE, CELLSIZE))
         self.body_bl_scale = pygame.transform.smoothscale(self.body_bl, (CELLSIZE, CELLSIZE))
+
+    def color_graphics(self):
+        color_head_up = pygame.Surface(self.head_up_scale.get_size())
+        color_head_down = pygame.Surface(self.head_down_scale.get_size())
+        color_head_right = pygame.Surface(self.head_right_scale.get_size())
+        color_head_left = pygame.Surface(self.head_left_scale.get_size())
+
+        color_tail_up = pygame.Surface(self.tail_up_scale.get_size())
+        color_tail_down = pygame.Surface(self.tail_down_scale.get_size())
+        color_tail_right = pygame.Surface(self.tail_right_scale.get_size())
+        color_tail_left = pygame.Surface(self.tail_left_scale.get_size())
+
+        color_body_vertical = pygame.Surface(self.body_vertical_scale.get_size())
+        color_body_horizontal = pygame.Surface(self.body_horizontal_scale.get_size())
+
+        color_body_tr = pygame.Surface(self.body_tr_scale.get_size())
+        color_body_tl = pygame.Surface(self.body_tl_scale.get_size())
+        color_body_br = pygame.Surface(self.body_br_scale.get_size())
+        color_body_bl = pygame.Surface(self.body_bl_scale.get_size())
+
+        #apply the color to the graphics
+        color_head_up.fill(self.change_color)
+        color_head_down.fill(self.change_color)
+        color_head_right.fill(self.change_color)
+        color_head_left.fill(self.change_color)
+
+        color_tail_up.fill(self.change_color)
+        color_tail_down.fill(self.change_color)
+        color_tail_right.fill(self.change_color)
+        color_tail_left.fill(self.change_color)
+
+        color_body_vertical.fill(self.change_color)
+        color_body_horizontal.fill(self.change_color)
+
+        color_body_tr.fill(self.change_color)
+        color_body_tl.fill(self.change_color)
+        color_body_br.fill(self.change_color)
+        color_body_bl.fill(self.change_color)
+
+        #apply blend to graphic
+        self.head_up_color = self.head_up_scale.copy()
+        self.head_up_color.blit(color_head_up, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.head_down_color = self.head_down_scale.copy()
+        self.head_down_color.blit(color_head_down, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.head_right_color = self.head_right_scale.copy()
+        self.head_right_color.blit(color_head_right, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.head_left_color = self.head_left_scale.copy()
+        self.head_left_color.blit(color_head_left, (0, 0), special_flags = pygame.BLEND_MULT)
+
+        self.tail_up_color = self.tail_up_scale.copy()
+        self.tail_up_color.blit(color_tail_up, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.tail_down_color = self.tail_down_scale.copy()
+        self.tail_down_color.blit(color_tail_down, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.tail_right_color = self.tail_right_scale.copy()
+        self.tail_right_color.blit(color_tail_right, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.tail_left_color = self.tail_left_scale.copy()
+        self.tail_left_color.blit(color_tail_left, (0, 0), special_flags = pygame.BLEND_MULT)
+
+        self.body_vertical_color = self.body_vertical_scale.copy()
+        self.body_vertical_color.blit(color_body_vertical, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.body_horizontal_color = self.body_horizontal_scale.copy()
+        self.body_horizontal_color.blit(color_body_horizontal, (0, 0), special_flags = pygame.BLEND_MULT)
+
+        self.body_tr_color = self.body_tr_scale.copy()
+        self.body_tr_color.blit(color_body_tr, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.body_tl_color = self.body_tl_scale.copy()
+        self.body_tl_color.blit(color_body_tl, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.body_br_color = self.body_br_scale.copy()
+        self.body_br_color.blit(color_body_br, (0, 0), special_flags = pygame.BLEND_MULT)
+        self.body_bl_color = self.body_bl_scale.copy()
+        self.body_bl_color.blit(color_body_bl, (0, 0), special_flags = pygame.BLEND_MULT)
     
     def draw_worm(self):
         self.update_head_graphics()
@@ -345,42 +425,42 @@ class WORM():
                 previous_block = self.body[index +1] - block
                 next_block = self.body[index -1] - block
                 if previous_block.x == next_block.x:
-                    DISPLAYSURF.blit(self.body_vertical_scale,block_rect)
+                    DISPLAYSURF.blit(self.body_vertical_color,block_rect)
                 elif previous_block.y == next_block.y:
-                    DISPLAYSURF.blit(self.body_horizontal_scale,block_rect)
+                    DISPLAYSURF.blit(self.body_horizontal_color,block_rect)
                 else:
                     if previous_block.x == -1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == -1:
-                        DISPLAYSURF.blit(self.body_tl_scale,block_rect)
+                        DISPLAYSURF.blit(self.body_tl_color,block_rect)
                     elif previous_block.x == -1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == -1:
-                        DISPLAYSURF.blit(self.body_bl_scale,block_rect)
+                        DISPLAYSURF.blit(self.body_bl_color,block_rect)
                     elif previous_block.x == 1 and next_block.y == -1 or previous_block.y == -1 and next_block.x == 1:
-                        DISPLAYSURF.blit(self.body_tr_scale,block_rect)
+                        DISPLAYSURF.blit(self.body_tr_color,block_rect)
                     elif previous_block.x == 1 and next_block.y == 1 or previous_block.y == 1 and next_block.x == 1:
-                        DISPLAYSURF.blit(self.body_br_scale,block_rect)
+                        DISPLAYSURF.blit(self.body_br_color,block_rect)
 
     def update_head_graphics(self):
         #determine head & eyes graphic direction
         head_relation = self.body[1] - self.body[0]
         if head_relation == Vector2(1,0):
-            self.head = self.head_left_scale
+            self.head = self.head_left_color
             self.eyes = self.eyes_left_scale
         elif head_relation == Vector2(-1,0):
-            self.head = self.head_right_scale
+            self.head = self.head_right_color
             self.eyes = self.eyes_right_scale
         elif head_relation == Vector2(0,1):
-            self.head = self.head_up_scale
+            self.head = self.head_up_color
             self.eyes = self.eyes_up_scale
         elif head_relation == Vector2(0,-1):
-            self.head = self.head_down_scale
+            self.head = self.head_down_color
             self.eyes = self.eyes_down_scale
 
     def update_tail_graphics(self):
         #determine tail graphics direction
         tail_relation = self.body[-2] - self.body[-1]
-        if tail_relation == Vector2(1,0): self.tail = self.tail_left_scale
-        elif tail_relation == Vector2(-1,0): self.tail = self.tail_right_scale
-        elif tail_relation == Vector2(0,1): self.tail = self.tail_up_scale
-        elif tail_relation == Vector2(0,-1): self.tail = self.tail_down_scale
+        if tail_relation == Vector2(1,0): self.tail = self.tail_left_color
+        elif tail_relation == Vector2(-1,0): self.tail = self.tail_right_color
+        elif tail_relation == Vector2(0,1): self.tail = self.tail_up_color
+        elif tail_relation == Vector2(0,-1): self.tail = self.tail_down_color
 
     def move_worm(self):
         if self.new_block == True:
