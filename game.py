@@ -93,7 +93,7 @@ colors = {"Aqua":AQUA,"Black":BLACK,"Blue":BLUE,"Dark Gray":DARKGRAY,"Dark Green
           "Red":RED,"Silver":SILVER,"Teal":TEAL,"White":WHITE,"Yellow":YELLOW}
 gridSizes = {"Extra Small":40, "Small":32, "Medium":20, "Large":16, "Extra Large":10}
 
-BGCOLOR = BLACK
+BGCOLOR = (25, 25, 25)
 global wormSpeed, fruitsNumber, slowModePowerups, WORMCOLOR
 WORMCOLOR = RED
 wormSpeed = 2
