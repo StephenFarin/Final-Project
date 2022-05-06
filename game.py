@@ -361,8 +361,6 @@ def runGame():
             drawApples(apples)
             drawBomb(bomb)
             drawScore(len(worm.body) - 3)
-            if shouldDrawSlowPowerup == True:
-                drawSlowPowerup(slowPowerupLoc)
             wormSpeedCounter = localWormSpeed
         wormSpeedCounter -= 1
         pygame.display.update()
