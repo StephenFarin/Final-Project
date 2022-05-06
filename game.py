@@ -437,8 +437,7 @@ def showStartScreen():
 
 
 def terminate():
-    pygame.quit()
-    sys.exit()
+    mainmenu()
 
 
 def getRandomLocation():
@@ -465,7 +464,7 @@ def showGameOverScreen():
     while True:
         if checkForKeyPress():
             pygame.event.get() # clear event queue
-            return
+            mainmenu()
 
 def drawScore(score):
     scoreSurf = BASICFONT.render('Score: %s' % (score), True, WHITE)
