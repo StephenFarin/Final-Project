@@ -52,6 +52,7 @@ class DropDown():
                     return self.active_option
         return -1
 
+global CELLSIZE, CELLWIDTH, CELLHEIGHT
 FPS = 30
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 640
@@ -90,6 +91,7 @@ COLOR_LIST_ACTIVE = (255, 150, 150)
 colors = {"Aqua":AQUA,"Black":BLACK,"Blue":BLUE,"Dark Gray":DARKGRAY,"Dark Green":DARKGREEN,"Fuschia":FUSCHIA,
           "Gray":GRAY,"Green":GREEN,"Lime":LIME,"Maroon":MAROON,"Navy Blue":NAVYBLUE,"Olive":OLIVE,"Purple":PURPLE,
           "Red":RED,"Silver":SILVER,"Teal":TEAL,"White":WHITE,"Yellow":YELLOW}
+gridSizes = {"Extra Small":40, "Small":32, "Medium":20, "Large":16, "Extra Large":10}
 
 BGCOLOR = BLACK
 global wormSpeed, fruitsNumber, slowModePowerups, WORMCOLOR
@@ -109,7 +111,7 @@ list2 = DropDown(
     [COLOR_INACTIVE, COLOR_ACTIVE],
     [COLOR_LIST_INACTIVE, COLOR_LIST_ACTIVE],
     225, 50, 200, 25, 
-    pygame.font.SysFont("COMIC.TTF", 20), 
+    pygame.font.SysFont("COMIC.TTF", 30), 
     "Select Fruits Amount", ["1", "3", "5", "10", "25"])
 list3 = DropDown(
     [COLOR_INACTIVE, COLOR_ACTIVE],
@@ -119,6 +121,13 @@ list3 = DropDown(
     "Snek Color", ["Aqua","Black","Blue","Dark Gray","Dark Green","Fuschia",
           "Gray","Green","Lime","Maroon","Navy Blue","Olive","Purple",
           "Red","Silver","Teal","White","Yellow"])
+list4 = DropDown(
+    [COLOR_INACTIVE, COLOR_ACTIVE],
+    [COLOR_LIST_INACTIVE, COLOR_LIST_ACTIVE],
+    25, 175, 200, 25, 
+    pygame.font.SysFont("COMIC.TTF", 30), 
+    "Grid Size", ["Extra Small", "Small", "Medium", "Large", "Extra Large"])
+
 
 UP = 'up'
 DOWN = 'down'
@@ -153,28 +162,28 @@ def draw_text(text, fot, color, surface, x, y):
 click = False
 
 def mainmenu():
+    firstIteration = True
     while True:
         screen.fill((0,0,0))
         font = pygame.font.SysFont(None, 20)
         draw_text('Main Menu', font, (255, 255, 255), screen, 20, 20)
 
         mouse = pygame.mouse.get_pos()
-
+        
         startButton = pygame.Rect(50, 100, 200, 50)
         MenuButton = pygame.Rect(50, 200, 200, 50)
-        if startButton.collidepoint((mouse)):
-            if click:
-                runGame()
-        if MenuButton.collidepoint((mouse)):
-            if click:                
-                MenuMenu()
+        if firstIteration == False:
+            if startButton.collidepoint((mouse)):
+                if click:
+                    runGame()
+            if MenuButton.collidepoint((mouse)):
+                if click:                
+                    MenuMenu()
         pygame.draw.rect(screen, TEAL, startButton)
         pygame.draw.rect(screen, MAROON, MenuButton)
         draw_text('Start Game', font, (255, 255, 255), screen, 80, 115)
         draw_text('Menu Menu', font, (255, 255, 255), screen, 80, 215)
-
         click = False
-
         for event in pygame.event.get():
             if event.type == QUIT:
                pygame.quit()
@@ -188,9 +197,10 @@ def mainmenu():
                     click = True
         pygame.display.update()
         mainClock.tick(60)
+        firstIteration = False
 
 def MenuMenu():
-    global fruitsNumber, wormSpeed, slowModePowerups, WORMCOLOR
+    global fruitsNumber, wormSpeed, slowModePowerups, WORMCOLOR, CELLSIZE, CELLWIDTH, CELLHEIGHT
     running = True
     fruitsNumber = 3
     wormSpeed = 2
@@ -227,6 +237,10 @@ def MenuMenu():
         if selected_option3 >= 0:
             list3.main = list3.options[selected_option3]
         list3.draw(screen)
+        selected_option4 = list4.update(event_list)
+        if selected_option4 >= 0:
+            list4.main = list4.options[selected_option4]
+        list4.draw(screen)
         if list1.main == "Slow":
             wormSpeed = 4
         elif list1.main == "Medium":
@@ -239,6 +253,11 @@ def MenuMenu():
             fruitsNumber = int(list2.main)
         if list3.main != "Snek Color":
             WORMCOLOR = colors[list3.main]
+        if list4.main != "Grid Size":
+            CELLSIZE = gridSizes[list4.main]
+            CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
+            CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
+            
         pygame.display.update()
         mainClock.tick(60)
 
