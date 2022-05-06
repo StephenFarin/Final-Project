@@ -111,7 +111,7 @@ list2 = DropDown(
     [COLOR_INACTIVE, COLOR_ACTIVE],
     [COLOR_LIST_INACTIVE, COLOR_LIST_ACTIVE],
     225, 50, 200, 25, 
-    pygame.font.SysFont("COMIC.TTF", 30), 
+    pygame.font.SysFont("COMIC.TTF", 25), 
     "Select Fruits Amount", ["1", "3", "5", "10", "25"])
 list3 = DropDown(
     [COLOR_INACTIVE, COLOR_ACTIVE],
@@ -182,7 +182,7 @@ def mainmenu():
         pygame.draw.rect(screen, TEAL, startButton)
         pygame.draw.rect(screen, MAROON, MenuButton)
         draw_text('Start Game', font, (255, 255, 255), screen, 80, 115)
-        draw_text('Menu Menu', font, (255, 255, 255), screen, 80, 215)
+        draw_text('Options Menu', font, (255, 255, 255), screen, 80, 215)
         click = False
         for event in pygame.event.get():
             if event.type == QUIT:
